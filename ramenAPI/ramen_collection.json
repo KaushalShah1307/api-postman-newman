@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "2dc75085-a440-476d-afe2-bd5ec3d782ba",
-		"name": "Working with data files: ramen",
+		"_postman_id": "aa2d2bad-f38b-405d-9b9d-7edc9cc0cfb3",
+		"name": "Working with data files: ramen copy",
 		"description": "This collection is an example of how to [use the Postman Collection Runner alongside CSV or JSON data files](https://www.getpostman.com/docs/v6/postman/collection_runs/starting_a_collection_run). Read more about it in [this blog post](https://wp.me/p5YBMx-127).\n\nWe will run this collection using one of these data files, exported from Google Search Trends about [the volume of searches for \"Ramen\" by city](https://trends.google.com/trends/explore?q=Ramen). ????\n\nIf you don't have these data files, download these examples:\n- [JSON file](https://s3.amazonaws.com/postman-static-getpostman-com/postman-docs/ramen.json)\n- [CSV file](https://s3.amazonaws.com/postman-static-getpostman-com/postman-docs/ramen.csv)\n\n### Get Started\n\nTo run a collection in the Postman app, click on the chevron (>) next to the collection's name to expand the details view. Select the blue **Run** button to open the Collection Runner in a new window.\n\n![[collection details](https://s3.amazonaws.com/postman-static-getpostman-com/postman-docs/ramen-app.png)](https://s3.amazonaws.com/postman-static-getpostman-com/postman-docs/ramen-app.png)\n\nVerify the collection and environment (if any). Select \"Choose files\", and load the data file in the collection runner. If the data file was loaded successfully, you can preview the values within the Collection Runner.\n\n![[data files preview](https://s3.amazonaws.com/postman-static-getpostman-com/postman-docs/ramen-preview.png)](https://s3.amazonaws.com/postman-static-getpostman-com/postman-docs/ramen-preview.png)\n\nThe iteration count can be anything from 1 to 3. If the number of iterations specified is greater than the number of rows in the data file (excluding the column headers), then the collection runner will iterate over the last row's values.\n\nRun the collection by hitting Start. You'll see the collection requests running in sequence and the results of your tests.\n\n![[collection runner running requests](https://s3.amazonaws.com/postman-static-getpostman-com/postman-docs/ramen-running.png)](https://s3.amazonaws.com/postman-static-getpostman-com/postman-docs/ramen-running.png)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -15,6 +15,7 @@
 						{
 							"listen": "test",
 							"script": {
+								"id": "b26a6d9d-ba6b-4123-9e91-ce762e088343",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Body contains City\", function () {",
@@ -23,7 +24,7 @@
 									"    ",
 									"    // older syntax still works too: with dot or bracket notation",
 									"    pm.expect(pm.response.text()).to.include(data.City); ",
-									"    console.log(\"City to be sent: \" + data[\"City\"]); ",
+									"    console.log(\"City to be sent ahead: \" + data[\"City\"]); ",
 									"});",
 									"",
 									"pm.test(\"Body contains number of ramen searches\", function () {",
@@ -212,6 +213,83 @@
 							"body": "{\"args\":{\"city\":\"{{City}}\",\"ramen\":\"{{Ramen}}\"},\"headers\":{\"host\":\"postman-echo.com\",\"accept\":\"*/*\",\"accept-encoding\":\"gzip, deflate\",\"cache-control\":\"no-cache\",\"cookie\":\"sails.sid=s%3AAltJ5Ew2w99uJjH9vfQ62TgIOuEmXFTY.jObB3DswbyhRWU566tKnQL5HoNninxDqzhkgCpb%2FcsU\",\"postman-token\":\"7c423993-887a-42db-aa70-ef6f16c631a7\",\"user-agent\":\"PostmanRuntime/7.1.1\",\"x-forwarded-port\":\"443\",\"x-forwarded-proto\":\"https\"},\"url\":\"https://postman-echo.com/get?city=%7B%7BCity%7D%7D&ramen=%7B%7BRamen%7D%7D\"}"
 						}
 					]
+				},
+				{
+					"name": "Example request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b26a6d9d-ba6b-4123-9e91-ce762e088343",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Body contains City\", function () {",
+									"    ",
+									"    pm.expect(pm.response.text()).to.include(pm.iterationData.get(\"City\"));",
+									"    ",
+									"    // older syntax still works too: with dot or bracket notation",
+									"    pm.expect(pm.response.text()).to.include(data.City); ",
+									"    console.log(\"City to be sent ahead: \" + data[\"City\"]); ",
+									"});",
+									"",
+									"pm.test(\"Body contains number of ramen searches\", function () {",
+									"    ",
+									"    pm.expect(pm.response.text()).to.include(pm.iterationData.get(\"Ramen\"));",
+									"    pm.expect(pm.response.json())",
+									"        .to.have.property(\"args\")",
+									"        .that.is.an(\"object\")",
+									"        .to.include.keys(\"ramen\");",
+									"        ",
+									"    console.log(\"Number of ramen searches to be sent: \" + pm.iterationData.get(\"Ramen\"));",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Another way to check if Body contains number of ramen searches\", function () {",
+									"    ",
+									"    pm.expect(pm.response.json())",
+									"        .to.nested.include({",
+									"            'args.ramen': JSON.stringify(pm.iterationData.get('Ramen'))",
+									"        });",
+									"        ",
+									"});",
+									"",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://postman-echo.com/get?city={{City}}&ramen={{Ramen}}",
+							"protocol": "https",
+							"host": [
+								"postman-echo",
+								"com"
+							],
+							"path": [
+								"get"
+							],
+							"query": [
+								{
+									"key": "city",
+									"value": "{{City}}"
+								},
+								{
+									"key": "ramen",
+									"value": "{{Ramen}}"
+								}
+							]
+						},
+						"description": "For this example, we are borrowing a simple request from [Postman Echo](https://docs.postman-echo.com/). This is Postman's service to test and demonstrate sample API calls from your REST clients. \n\nThis endpoint echoes the HTTP headers, request parameters, and the complete URI requested. We will be sending 2 parameters with our request: `city` and `ramen`. The parameter data will be supplied in the data file that we will upload when using the Postman Collection Runner to run the collection.\n\nUnder the **Tests** tab, write your tests in JavaScript. The example test shown here relies on Postman's `pm.*` API. See more examples under the **Tests** tab in the Postman app.\n\n```\npm.test(\"Body contains City\", function () {\n    \n    pm.expect(pm.response.text()).to.include(pm.iterationData.get(\"City\"));\n    \n    // older syntax still works too: with dot or bracket notation\n    pm.expect(pm.response.text()).to.include(data.City); \n    console.log(\"City to be sent: \" + data[\"City\"]); \n});\n\n```"
+					},
+					"response": []
 				}
 			],
 			"description": "This is a subfolder of the same request"
