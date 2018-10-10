@@ -23,6 +23,6 @@ npm i newman -g
  ```
  newman run Collection_fileName.json -e Enviornment_fileName.json
  ```
-![Screenshot](https://imgur.com/a/EoSxDRh)
+![Screenshot](https://imgur.com/ks3kEks)
 
 ![Screenshot](https://imgur.com/8Z6GuNl)
